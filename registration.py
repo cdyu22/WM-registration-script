@@ -1,4 +1,5 @@
 import tkinter as tk
+import subprocess
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -14,28 +15,28 @@ class Application(tk.Frame):
         # ListBox
         self.list = tk.Listbox(self)  
 
-            # To delete listbox entries
-        self.delete_btn = tk.Button(self, text="Delete Course", command=self.delete_selection) 
-        self.list.pack() 
-        self.delete_btn.pack(fill=tk.BOTH) 
-
-            # To add entries
+        # To add entries
         entry_frame = tk.Frame(root, borderwidth=5)
         entry_frame.pack()
 
-        self.text_box=tk.Entry(entry_frame)
-        self.text_box.pack()
+        self.CRN = tk.Entry(entry_frame)
+        self.CRN.pack()
 
         button = tk.Button(entry_frame, text='Add CRN', command=self.insert_entry)
         button.pack(pady=10)
 
-        # Quit Button
-        self.quit = tk.Button(self, text="Quit", fg="black", command=self.master.destroy)
-        self.quit.pack(side="bottom")
+        # To delete listbox entries
+        self.delete_btn = tk.Button(self, text="Delete Course", command=self.delete_selection) 
+        self.list.pack() 
+        self.delete_btn.pack(fill=tk.BOTH) 
+
+        # Start Button: To quit, command=self.master.destroy
+        self.start = tk.Button(self, text="Start", fg="black", command=self.start)
+        self.start.pack(side="bottom")
 
     def insert_entry(self):
-        Course = self.text_box.get()
-        length = len(Course) # To check if it's 5
+        Course = self.CRN.get()
+        length = len(Course) 
 
         integer = True
         try:
@@ -51,21 +52,21 @@ class Application(tk.Frame):
             if self.invalid == None:
                 self.invalid = tk.Label(self,text='Invalid CRN!')
                 self.invalid.pack(side="top")
-        listvar = self.list.get(0,"end")
-        print(listvar)
-        listvar = list(listvar)
-        print(listvar)
-        listvar = [int(item) for item in listvar]
-        print(listvar)
-        print("")
-            
-        self.text_box.delete(0, 'end')
+
+
+        # Clear entry box
+        self.CRN.delete(0, 'end')
 
     def delete_selection(self): 
         selection = self.list.curselection() 
         self.list.delete(selection)
 
+    def start(self):
+        subprocess.call(['./',"example.ahk"])
+        self.master.destroy()
+
 root = tk.Tk()
+root.title("W&M Registration Macro")
 root.geometry("300x400")
 app = Application(master=root)
 app.mainloop()
